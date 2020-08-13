@@ -1,5 +1,7 @@
 # FallGuysWinCounter
 Fall Guys Win &amp; Streak Counter
-
-
-Once ready, should just be an exe you can run. Outputs to a .txt file.
+  
+**Current Hotkeys:**  
+Win Crown! = "Ctrl+Shift+W" or top menu button  
+Lose Round = "Ctrl+Shift+L" or top menu button  
+Reset Counter = "Ctrl+Shift+0" or top menu button
