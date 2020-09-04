@@ -1,2 +1,2 @@
-Wins: 0
+Wins: 1
 Streak: 0
