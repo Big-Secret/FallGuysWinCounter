@@ -11,7 +11,8 @@ versionNo = "v1.1"
 def getWins():
     file = open("FallGuysWin.txt", "r")
     wins = file.readline()
-    wins = re.sub("\D","",wins)
+    wins = re.sub("\D", "", wins)
+    wins = int(wins)
     print(wins)
 
 getWins()

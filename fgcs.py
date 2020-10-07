@@ -7,32 +7,48 @@ import webbrowser
 import re
 
 versionNo = "v1.1"
-wins = 0
 
 def getWins():
-    file = open("FallGuysWin.txt", "r")
-    wins = file.readline()
-    wins = re.sub("\D", "", wins)
-    return wins
-
-
-def initializeTextFiles():
-    file = open("FallGuysWin.txt", "w+")
-    initText = f"Total Wins: {wins}\n"\
-               f"Wins Today: {fallGuysBot.wins}\n" \
-               f"Streak: {fallGuysBot.streak}"
-    file.write(initText)
-    file.close()
+    try:
+        file = open("FallGuysWin.txt", "r")
+        totalWins = file.readline()
+        totalWins = re.sub("\D", "", totalWins)
+        totalWins = int(totalWins)
+    except:
+        pass
 
 def callback(url):
     webbrowser.open_new(url)
 
 class FallGuysIsDopeTho():
-    def __init__(self,TotalWins,Wins,Streak,Games):
-        self.totalWins = TotalWins
+    def __init__(self,allWins,Wins,Streak,Games):
+        try:
+            self.totalWins = allWins
+        except:
+            self.totalWins = 0
         self.wins = Wins
         self.streak = Streak
         self.games = Games
+
+    def getWins(self):
+        try:
+            file = open("FallGuysWin.txt", "r")
+            self.totalWins = file.readline()
+            self.totalWins = re.sub("\D", "", self.totalWins)
+            self.totalWins = int(self.totalWins)
+        except:
+            self.totalWins = 0
+
+    def initializeTextFiles(self):
+        file = open("FallGuysWin.txt", "w+")
+        initText = f"Total Wins: {self.totalWins}\n" \
+                   f"Wins Today: 0\n" \
+                   f"Streak: 0"
+        file.write(initText)
+        file.close()
+
+    def setWins(self,wins):
+        self.totalWins = wins
 
     def addWin(self):
         self.wins += 1
@@ -45,7 +61,7 @@ class FallGuysIsDopeTho():
                    f"Streak: {self.streak}"
         file = open("FallGuysWin.txt", "w+")
         file.write(newScore)
-        print(f"File has been written, new wins count is {self.wins}, new streak is {self.streak}, total wins is {self.totalWins}")
+        print(f"New wins count is {self.wins}, new streak is {self.streak}, total wins is {self.totalWins}")
     def loseRound(self):
         self.streak = 0
         winsLabel.config(text=self.wins)
@@ -55,7 +71,7 @@ class FallGuysIsDopeTho():
                     f"Streak: {self.streak}"
         file = open("FallGuysWin.txt", "w+")
         file.write(newScore)
-        print(f"File has been written, new wins count is {self.wins}, new streak is {self.streak}, total wins is {self.totalWins}")
+        print(f"New wins count is {self.wins}, new streak is {self.streak}, total wins is {self.totalWins}")
     def resetScore(self):
         self.wins = 0
         self.streak = 0
@@ -66,9 +82,24 @@ class FallGuysIsDopeTho():
                    f"Streak: {self.streak}"
         file = open("FallGuysWin.txt", "w+")
         file.write(newScore)
-        print(f"Score Reset, file has been written, new wins count is {self.wins}, new streak is {self.streak}, total wins remains {self.totalWins}")
+        print(f"Score Reset, New wins count is {self.wins}, new streak is {self.streak}, total wins remains {self.totalWins}")
 
-fallGuysBot = FallGuysIsDopeTho(wins, 0,0,0)
+    def removeWin(self):
+        self.wins -= 1
+        self.streak -= 1
+        self.totalWins -= 1
+        winsLabel.config(text=self.wins)
+        streakLabel.config(text=self.streak)
+        newScore = f"Total Wins: {self.totalWins}\n"\
+                   f"Wins Today: {self.wins}\n"\
+                   f"Streak: {self.streak}"
+        file = open("FallGuysWin.txt", "w+")
+        file.write(newScore)
+        print(f"New wins count is {self.wins}, new streak is {self.streak}, total wins is {self.totalWins}")
+
+
+currentWins = getWins()
+fallGuysBot = FallGuysIsDopeTho(currentWins, 0,0,0)
 
 # Hokey Settings
 hotkeyUp = "Ctrl+Shift+W"
@@ -102,6 +133,7 @@ menuBar.add_separator()
 menuBar.add_command(label="😠 Lose 😠", command=fallGuysBot.loseRound)
 menuBar.add_separator()
 resetMenu = Menu(menuBar, tearoff=0)
+resetMenu.add_command(label="Undo Win", command=fallGuysBot.removeWin)
 resetMenu.add_command(label="Reset Counter", command=fallGuysBot.resetScore)
 menuBar.add_cascade(label="Reset", menu=resetMenu)
 #Display the menu
@@ -126,6 +158,7 @@ versionLabel.bind("<Button-1>", lambda e: callback("https://www.twitch.tv/bigsec
 
 # Run app
 if __name__ == '__main__':
-    getWins()
-    initializeTextFiles()
+
+    fallGuysBot.getWins()
+    fallGuysBot.initializeTextFiles()
     main.mainloop()

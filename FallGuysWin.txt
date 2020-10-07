@@ -1,3 +1,3 @@
-Total Wins: 56
-Wins: 56
-Streak: 5
+Total Wins: 79
+Wins Today: 0
+Streak: 0
