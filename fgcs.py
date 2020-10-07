@@ -4,12 +4,22 @@ import tkinter.font as tkFont
 import os.path
 import keyboard
 import webbrowser
+import re
 
-versionNo = "v1.0"
+versionNo = "v1.1"
+wins = 0
+
+def getWins():
+    file = open("FallGuysWin.txt", "r")
+    wins = file.readline()
+    wins = re.sub("\D", "", wins)
+    return wins
+
 
 def initializeTextFiles():
     file = open("FallGuysWin.txt", "w+")
-    initText = f"Wins: {fallGuysBot.wins}\n" \
+    initText = f"Total Wins: {wins}\n"\
+               f"Wins Today: {fallGuysBot.wins}\n" \
                f"Streak: {fallGuysBot.streak}"
     file.write(initText)
     file.close()
@@ -18,43 +28,47 @@ def callback(url):
     webbrowser.open_new(url)
 
 class FallGuysIsDopeTho():
-    def __init__(self,Wins,Streak,Games):
+    def __init__(self,TotalWins,Wins,Streak,Games):
+        self.totalWins = TotalWins
         self.wins = Wins
         self.streak = Streak
         self.games = Games
-    # function to add a death
+
     def addWin(self):
         self.wins += 1
         self.streak += 1
+        self.totalWins += 1
         winsLabel.config(text=self.wins)
         streakLabel.config(text=self.streak)
-        newScore = f"Wins: {fallGuysBot.wins}\n" \
-                   f"Streak: {fallGuysBot.streak}"
+        newScore = f"Total Wins: {self.totalWins}\n"\
+                   f"Wins Today: {self.wins}\n" \
+                   f"Streak: {self.streak}"
         file = open("FallGuysWin.txt", "w+")
         file.write(newScore)
-        print(f"File has been written, new wins count is {self.wins}, new streak is {self.streak}")
+        print(f"File has been written, new wins count is {self.wins}, new streak is {self.streak}, total wins is {self.totalWins}")
     def loseRound(self):
         self.streak = 0
         winsLabel.config(text=self.wins)
         streakLabel.config(text=self.streak)
-        newScore = f"Wins: {fallGuysBot.wins}\n" \
-                   f"Streak: {fallGuysBot.streak}"
+        newScore = f"Total Wins: {self.totalWins}\n"\
+                    f"Wins Today: {self.wins}\n" \
+                    f"Streak: {self.streak}"
         file = open("FallGuysWin.txt", "w+")
         file.write(newScore)
-        print(f"File has been written, new wins count is {self.wins}, new streak is {self.streak}")
+        print(f"File has been written, new wins count is {self.wins}, new streak is {self.streak}, total wins is {self.totalWins}")
     def resetScore(self):
         self.wins = 0
         self.streak = 0
         winsLabel.config(text=self.wins)
         streakLabel.config(text=self.streak)
-        newScore = f"Wins: {fallGuysBot.wins}\n" \
-                   f"Streak: {fallGuysBot.streak}"
+        newScore = f"Total Wins: {self.totalWins}\n"\
+                   f"Wins Today: {self.wins}\n" \
+                   f"Streak: {self.streak}"
         file = open("FallGuysWin.txt", "w+")
         file.write(newScore)
-        print(f"Score Reset, file has been written, new wins count is {self.wins}, new streak is {self.streak}")
+        print(f"Score Reset, file has been written, new wins count is {self.wins}, new streak is {self.streak}, total wins remains {self.totalWins}")
 
-
-fallGuysBot = FallGuysIsDopeTho(0,0,0)
+fallGuysBot = FallGuysIsDopeTho(wins, 0,0,0)
 
 # Hokey Settings
 hotkeyUp = "Ctrl+Shift+W"
@@ -112,5 +126,6 @@ versionLabel.bind("<Button-1>", lambda e: callback("https://www.twitch.tv/bigsec
 
 # Run app
 if __name__ == '__main__':
+    getWins()
     initializeTextFiles()
     main.mainloop()
